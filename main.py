@@ -33,6 +33,15 @@ def main() -> None:
     with open(path, "w", encoding="utf-8", newline="") as f:
         f.write(LINE)
 
+    # Post-write verification: what landed on disk must be byte-identical
+    # to LINE — exact length, no trailing newline, no stray characters.
+    with open(path, "rb") as f:
+        written = f.read()
+    assert written == LINE.encode("utf-8"), (
+        f"entry.txt mismatch: wrote {len(written)} bytes, expected "
+        f"{len(LINE.encode('utf-8'))} bytes for the winning line"
+    )
+
 
 if __name__ == "__main__":
     main()
